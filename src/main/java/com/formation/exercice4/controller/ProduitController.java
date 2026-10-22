@@ -2,6 +2,10 @@ package com.formation.exercice4.controller;
 import com.formation.exercice4.model.Produit;
 import com.formation.exercice4.service.ProduitService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +28,24 @@ public class ProduitController {
 // GET /api/v1/produits — Lister tous les produits
 // ============================================================
     @GetMapping
-    public ResponseEntity<List<Produit>> listerTous() {
-        List<Produit> produits = produitService.recupererTous();
-        return ResponseEntity.ok(produits); // 200 OK
+    public ResponseEntity<Page<Produit>> listerTous(
+            @PageableDefault(page = 0, size = 5, sort = "prix", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<Produit> produits = produitService.recupererTous(pageable);
+        return ResponseEntity.ok(produits);
+    }
+    // ============================================================
+// GET /api/v1/produits/recherche?nom=clavier — Rechercher par nom
+// ============================================================
+    @GetMapping("/recherche")
+    public ResponseEntity<Page<Produit>> rechercher(
+            @RequestParam(required = false) String nom,
+            @RequestParam(required = false) Double prixMin,
+            @RequestParam(required = false) Double prixMax,
+            @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+
+        Page<Produit> produitFiltre = produitService.recupererFiltre(nom, prixMin, prixMax, pageable);
+        return ResponseEntity.ok(produitFiltre);
     }
     // ============================================================
 // GET /api/v1/produits/{id} — Obtenir un produit par son ID
@@ -36,16 +55,6 @@ public class ProduitController {
         return produitService.recupererParId(id)
                 .map(ResponseEntity::ok) // 200 OK si trouvé
                 .orElse(ResponseEntity.notFound().build()); // 404 si non trouvé
-    }
-
-    @GetMapping("/filtrer")
-    public ResponseEntity<List<Produit>> obtenirParFiltre(
-            @RequestParam(required = false) String nom,
-            @RequestParam(required = false) Double prixMin,
-            @RequestParam(required = false) Double prixMax) {
-
-        List<Produit> produitFiltre = produitService.recupererFiltre(nom, prixMin, prixMax);
-        return ResponseEntity.ok(produitFiltre);
     }
     // ============================================================
 // POST /api/v1/produits — Créer un nouveau produit
@@ -77,13 +86,5 @@ public class ProduitController {
             return ResponseEntity.noContent().build(); // 204 No Content
         }
         return ResponseEntity.notFound().build(); // 404 si non trouvé
-    }
-    // ============================================================
-// GET /api/v1/produits/recherche?nom=clavier — Rechercher par nom
-// ============================================================
-    @GetMapping("/recherche")
-    public ResponseEntity<List<Produit>> rechercherParNom(@RequestParam String nom) {
-        List<Produit> resultats = produitService.rechercherParNom(nom);
-        return ResponseEntity.ok(resultats);
     }
 }

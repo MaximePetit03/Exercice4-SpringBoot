@@ -2,8 +2,9 @@ package com.formation.exercice4.service;
 import com.formation.exercice4.model.Produit;
 import com.formation.exercice4.repository.ProduitRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
 import java.util.Optional;
 /**
  * Service contenant la logique métier pour les produits.
@@ -26,8 +27,8 @@ public class ProduitService {
     /**
      * Retourne tous les produits.
      */
-    public List<Produit> recupererTous() {
-        return produitRepository.findAll();
+    public Page<Produit> recupererTous(Pageable pageable) {
+        return produitRepository.findAll(pageable);
     }
     /**
      * Retourne un produit par son ID.
@@ -37,8 +38,8 @@ public class ProduitService {
         return produitRepository.findById(id);
     }
 
-    public List<Produit> recupererFiltre(String nom, Double prixMin, Double prixMax) {
-        return produitRepository.filtrer(nom, prixMin, prixMax);
+    public Page<Produit> recupererFiltre(String nom, Double prixMin, Double prixMax, Pageable pageable) {
+        return produitRepository.filtrer(nom, prixMin, prixMax, pageable);
     }
     /**
      * Crée un nouveau produit.
@@ -79,11 +80,5 @@ public class ProduitService {
             return true;
         }
         return false;
-    }
-    /**
-     * Recherche des produits par nom (recherche partielle, insensible à la casse).
-     */
-    public List<Produit> rechercherParNom(String nom) {
-        return produitRepository.findByNomContainingIgnoreCase(nom);
     }
 }

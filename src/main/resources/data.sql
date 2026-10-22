@@ -8,3 +8,12 @@ INSERT INTO produits (nom, description, prix, stock) VALUES
                                                          ('Webcam HD', 'Webcam 1080p avec micro intégré', 59.99, 90),
                                                          ('Tapis de souris XXL', 'Tapis gaming 80x30cm antidérapant', 19.99, 300),
                                                          ('Support laptop', 'Support réglable en aluminium', 34.99, 60);
+INSERT INTO utilisateurs (nom, prenom, email, age) VALUES
+                                                       ('Dupont', 'Jean', 'jean.dupont@example.com', 28),
+                                                       ('Martin', 'Sophie', 'sophie.martin@example.com', 34),
+                                                       ('Durand', 'Pierre', 'pierre.durand@example.com', 41),
+                                                       ('Bernard', 'Claire', 'claire.bernard@example.com', 25),
+                                                       ('Thomas', 'Lucas', 'lucas.thomas@example.com', 30),
+                                                       ('Robert', 'Emma', 'emma.robert@example.com', 22),
+                                                       ('Richard', 'Antoine', 'antoine.richard@example.com', 39),
+                                                       ('Petit', 'Marie', 'marie.petit@example.com', 27);

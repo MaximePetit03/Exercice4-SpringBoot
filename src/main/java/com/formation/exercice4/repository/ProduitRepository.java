@@ -1,5 +1,7 @@
 package com.formation.exercice4.repository;
 import com.formation.exercice4.model.Produit;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,9 +34,10 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
             "(:nom IS NULL OR LOWER(p.nom) LIKE LOWER(CONCAT('%', :nom, '%'))) AND " +
             "(:prixMin IS NULL OR p.prix >= :prixMin) AND " +
             "(:prixMax IS NULL OR p.prix <= :prixMax)")
-    List<Produit> filtrer(@Param("nom") String nom,
+    Page<Produit> filtrer(@Param("nom") String nom,
                           @Param("prixMin") Double prixMin,
-                          @Param("prixMax") Double prixMax);
+                          @Param("prixMax") Double prixMax,
+                          Pageable pageable);
 }
 
 
